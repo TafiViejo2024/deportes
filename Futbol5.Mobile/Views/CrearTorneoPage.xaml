@@ -1,0 +1,78 @@
+<ContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="Futbol5.Mobile.Views.CrearTorneoPage"
+    BackgroundColor="#F5F5F5">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <!-- Título -->
+            <Label Text="🏆 Nuevo Torneo"
+                   FontSize="26"
+                   FontAttributes="Bold"
+                   TextColor="#222"/>
+
+            <!-- Nombre -->
+            <Entry x:Name="NombreEntry"
+                   Placeholder="Nombre del torneo"/>
+
+            <!-- Tipo -->
+            <Label Text="Tipo de torneo"
+                   FontSize="12"
+                   TextColor="Gray"/>
+
+            <Picker x:Name="TipoPicker"
+                    Title="Seleccionar tipo">
+                <Picker.Items>
+                    <x:String>Liga</x:String>
+                    <x:String>Eliminación</x:String>
+                    <x:String>Mixto</x:String>
+                </Picker.Items>
+            </Picker>
+
+            <!-- Cantidad equipos -->
+            <Entry x:Name="CantidadEquiposEntry"
+                   Placeholder="Cantidad de equipos"
+                   Keyboard="Numeric"/>
+
+            <!-- Fecha inicio -->
+            <Label Text="Fecha inicio"
+                   FontSize="12"
+                   TextColor="Gray"/>
+
+            <DatePicker x:Name="FechaInicioPicker"/>
+
+            <!-- Fecha fin -->
+            <HorizontalStackLayout Spacing="10">
+                <Switch x:Name="TieneFinSwitch"/>
+                <Label Text="Tiene fecha de fin"/>
+            </HorizontalStackLayout>
+
+            <DatePicker x:Name="FechaFinPicker"
+                        IsEnabled="{Binding Source={x:Reference TieneFinSwitch}, Path=IsToggled}"/>
+
+            <!-- Imagen -->
+            <Button Text="Seleccionar imagen"
+                    Clicked="OnSeleccionarImagen"/>
+
+            <Image x:Name="PreviewImagen"
+                   HeightRequest="150"
+                   Aspect="AspectFill"
+                   BackgroundColor="#DDD"/>
+
+            <!-- Botón guardar -->
+            <Button Text="Guardar torneo"
+                    BackgroundColor="#2E7D32"
+                    TextColor="White"
+                    HeightRequest="50"
+                    CornerRadius="10"
+                    Clicked="OnCrearTorneo"/>
+
+            <Button Text="Cancelar"
+                    Clicked="OnCancelar"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Futbol5.Api/Futbol5.Api.csproj" />
+  <Project Path="Futbol5.Mobile/Futbol5.Mobile.csproj" />
+</Solution>
