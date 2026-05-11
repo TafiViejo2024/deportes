@@ -1,4 +1,5 @@
 ﻿using Futbol5.Api.Data;
+using Futbol5.Api.Dtos;
 using Futbol5.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 

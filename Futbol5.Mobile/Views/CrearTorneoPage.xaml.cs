@@ -36,22 +36,39 @@ public partial class CrearTorneoPage : ContentPage
 
             var content = new MultipartFormDataContent();
 
-            content.Add(new StringContent(NombreEntry.Text), "Nombre");
+            // Nombre
+            content.Add(
+                new StringContent(NombreEntry.Text),
+                "Nombre");
 
-            content.Add(new StringContent(
-                FechaInicioPicker.Date.ToString()), "FechaInicio");
+            // Tipo
+            content.Add(
+                new StringContent(TipoPicker.SelectedItem?.ToString() ?? ""),
+                "Tipo");
 
-            // Fecha fin opcional (simple)
-            if (FechaFinPicker.Date > FechaInicioPicker.Date)
+            // Cantidad equipos
+            content.Add(
+                new StringContent(CantidadEquiposEntry.Text ?? "0"),
+                "CantidadEquipos");
+
+            // Fecha inicio
+            content.Add(
+                new StringContent(FechaInicioPicker.Date.ToString()),
+                "FechaInicio");
+
+            // Fecha fin
+            if (TieneFinSwitch.IsToggled)
             {
-                content.Add(new StringContent(
-                    FechaFinPicker.Date.ToString()), "FechaFin");
+                content.Add(
+                    new StringContent(FechaFinPicker.Date.ToString()),
+                    "FechaFin");
             }
 
             // Imagen
             if (_imagen != null)
             {
                 var stream = await _imagen.OpenReadAsync();
+
                 var streamContent = new StreamContent(stream);
 
                 streamContent.Headers.ContentType =
@@ -62,24 +79,29 @@ public partial class CrearTorneoPage : ContentPage
 
             var http = new HttpClient
             {
-                BaseAddress = new Uri("https://10.0.2.2:7297/") // 👈 Android fix
+                BaseAddress = new Uri("https://10.0.2.2:7297/")
             };
 
-            var response = await http.PostAsync("api/torneos/con-imagen", content);
+            var response = await http.PostAsync(
+                "api/torneos/con-imagen",
+                content);
+
+            var responseText = await response.Content.ReadAsStringAsync();
 
             if (response.IsSuccessStatusCode)
             {
                 await DisplayAlert("OK", "Torneo creado", "OK");
+
                 await Navigation.PopModalAsync();
             }
             else
             {
-                await DisplayAlert("Error", "No se pudo crear el torneo", "OK");
+                await DisplayAlert("Error", responseText, "OK");
             }
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Error", ex.Message, "OK");
+            await DisplayAlert("Error", ex.ToString(), "OK");
         }
     }
 
