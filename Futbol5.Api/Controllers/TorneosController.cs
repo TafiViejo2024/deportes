@@ -1,7 +1,10 @@
 ﻿using Futbol5.Api.Data;
 using Futbol5.Api.Dtos;
 using Futbol5.Api.Models;
+using System.IO;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Futbol5.Api.Controllers
 {
@@ -17,47 +20,75 @@ namespace Futbol5.Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok(_context.Torneos.ToList());
+            var torneos = await _context.Torneos.ToListAsync();
+
+            var resultado = torneos.Select(t => new TorneoDto
+            {
+                Id = t.Id,
+                Nombre = t.Nombre,
+                FechaInicio = t.FechaInicio,
+                Estado = t.Estado,
+
+                ImagenBase64 = t.Imagen != null
+                    ? Convert.ToBase64String(t.Imagen)
+                    : null
+            });
+
+            return Ok(resultado);
         }
+
+        //[HttpPost]
+        //public async Task<IActionResult> Create([FromForm] CrearTorneoDto dto)
+        //{
+        //    var torneo = new Torneo
+        //    {
+        //        Nombre = dto.Nombre,
+        //        FechaInicio = dto.FechaInicio,
+        //        FechaFin = dto.FechaFin,
+        //        Tipo = dto.Tipo,
+        //        CantidadEquipos = dto.CantidadEquipos
+        //    };
+
+        //    _context.Torneos.Add(torneo);
+
+        //    await _context.SaveChangesAsync();
+
+        //    return Ok(torneo);
+        //}
 
         [HttpPost]
-        public async Task<IActionResult> Create(Torneo torneo)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> Crear(
+         [FromForm] CrearTorneoDto dto)
         {
-            _context.Torneos.Add(torneo);
-            await _context.SaveChangesAsync();
-            return Ok(torneo);
-        }
+            byte[]? imagenBytes = null;
 
-        [HttpPost("con-imagen")]
-        public async Task<IActionResult> CrearConImagen([FromForm] TorneoCreateDto dto)
-        {
-            string? filePath = null;
-
+            // Imagen opcional
             if (dto.Imagen != null)
             {
-                var fileName = Guid.NewGuid() + Path.GetExtension(dto.Imagen.FileName);
-                var path = Path.Combine("wwwroot/images", fileName);
+                using var memoryStream = new MemoryStream();
 
-                Directory.CreateDirectory("wwwroot/images");
+                await dto.Imagen.CopyToAsync(memoryStream);
 
-                using (var stream = new FileStream(path, FileMode.Create))
-                {
-                    await dto.Imagen.CopyToAsync(stream);
-                }
-
-                filePath = "/images/" + fileName;
+                imagenBytes = memoryStream.ToArray();
             }
 
             var torneo = new Torneo
             {
                 Nombre = dto.Nombre,
                 FechaInicio = dto.FechaInicio,
-                ImagenUrl = filePath
+                FechaFin = dto.FechaFin,
+                Tipo = dto.Tipo,
+                CantidadEquipos = dto.CantidadEquipos,
+
+                // Guardar bytes en SQL
+                Imagen = imagenBytes
             };
 
             _context.Torneos.Add(torneo);
+
             await _context.SaveChangesAsync();
 
             return Ok(torneo);

@@ -23,46 +23,55 @@
                     Clicked="OnNuevoTorneo"/>
         </Grid>
 
-        <!-- Lista -->
-        <CollectionView x:Name="TorneosList">
+
+        <CollectionView x:Name="TorneosList"
+                SelectionMode="None">
 
             <CollectionView.ItemTemplate>
+
                 <DataTemplate>
 
                     <Frame Margin="10"
-                           CornerRadius="12"
-                           HasShadow="True"
-                           Padding="0">
+                   CornerRadius="12"
+                   HasShadow="True"
+                   Padding="0"
+                   BackgroundColor="White"
+                   BorderColor="#E0E0E0">
 
-                        <Grid RowDefinitions="150,Auto" BackgroundColor="White">
+                        <VerticalStackLayout Spacing="0">
 
                             <!-- Imagen -->
-                            <Image Source="{Binding ImagenUrl}"
-                                   Aspect="AspectFill"
-                                   HeightRequest="150"/>
+                            <Image Source="{Binding ImagenSource}"
+                                Aspect="AspectFill"
+                                HeightRequest="180"
+                                BackgroundColor="#DDD"/>             
 
-                            <!-- Info -->
-                            <VerticalStackLayout Grid.Row="1" Padding="10" Spacing="5">
+                            <!-- Contenido -->
+                            <VerticalStackLayout Padding="12"
+                                         Spacing="6">
 
                                 <Label Text="{Binding Nombre}"
-                                       FontSize="18"
-                                       FontAttributes="Bold"/>
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="#222"/>
 
                                 <Label Text="{Binding FechaInicio, StringFormat='Fecha: {0:dd/MM/yyyy}'}"
-                                       FontSize="12"
-                                       TextColor="Gray"/>
+                               FontSize="13"
+                               TextColor="Gray"/>
 
                                 <Label Text="{Binding Estado}"
-                                       FontSize="12"
-                                       TextColor="#2E7D32"/>
+                               FontSize="13"
+                               TextColor="#2E7D32"
+                               FontAttributes="Bold"/>
 
                             </VerticalStackLayout>
 
-                        </Grid>
+                        </VerticalStackLayout>
 
                     </Frame>
 
                 </DataTemplate>
+
             </CollectionView.ItemTemplate>
 
         </CollectionView>

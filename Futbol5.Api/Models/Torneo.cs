@@ -12,7 +12,7 @@
 
         public string Estado { get; set; } = "Activo";
 
-        public string? ImagenUrl { get; set; }
+        public byte[]? Imagen { get; set; }
 
         // 🔽 NUEVOS (recomendados)
         public string? Tipo { get; set; } // Liga, Eliminación, etc.

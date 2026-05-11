@@ -79,12 +79,13 @@ public partial class CrearTorneoPage : ContentPage
 
             var http = new HttpClient
             {
-                BaseAddress = new Uri("https://10.0.2.2:7297/")
+                BaseAddress = new Uri("https://localhost:7297")
             };
 
-            var response = await http.PostAsync(
-                "api/torneos/con-imagen",
-                content);
+
+            var response = await http.PostAsync("api/torneos", content);
+
+            //var response = await http.PostAsync("api/torneos/con-imagen",content);
 
             var responseText = await response.Content.ReadAsStringAsync();
 
